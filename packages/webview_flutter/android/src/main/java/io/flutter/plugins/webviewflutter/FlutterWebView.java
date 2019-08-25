@@ -9,6 +9,7 @@ import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebStorage;
 import android.webkit.WebViewClient;
@@ -147,8 +148,18 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     if (headers == null) {
       headers = Collections.emptyMap();
     }
+    Log.v("FLUTTER_WEBVIEW", "Loading url " + url + ", headers=" + headerMapToString(headers));
     webView.loadUrl(url, headers);
     result.success(null);
+  }
+
+  private String headerMapToString(Map<String, String> map) {
+    StringBuilder mapAsString = new StringBuilder("{");
+    for (String key : map.keySet()) {
+      mapAsString.append(key).append("=").append(map.get(key)).append(", ");
+    }
+    mapAsString.delete(mapAsString.length() - 2, mapAsString.length()).append("}");
+    return mapAsString.toString();
   }
 
   private void canGoBack(Result result) {

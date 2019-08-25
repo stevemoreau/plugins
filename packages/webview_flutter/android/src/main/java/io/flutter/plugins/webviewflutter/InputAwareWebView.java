@@ -10,6 +10,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.util.Log;
+import java.util.Map;
 
 /**
  * A WebView subclass that mirrors the same implementation hacks that the system WebView does in
@@ -30,6 +32,27 @@ final class InputAwareWebView extends WebView {
   InputAwareWebView(Context context, View containerView) {
     super(context);
     this.containerView = containerView;
+  }
+
+  private String headerMapToString(Map<String, String> map) {
+    StringBuilder mapAsString = new StringBuilder("{");
+    for (String key : map.keySet()) {
+      mapAsString.append(key).append("=").append(map.get(key)).append(", ");
+    }
+    mapAsString.delete(mapAsString.length() - 2, mapAsString.length()).append("}");
+    return mapAsString.toString();
+  }
+
+  @Override
+  public void loadUrl(String url) {
+    Log.v("FLUTTER_WEBVIEW", "InputAwareWebView: Loading url " + url);
+    super.loadUrl(url);
+  }
+
+  @Override
+  public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
+    Log.v("FLUTTER_WEBVIEW", "InputAwareWebView: Loading url " + url + ", headers=" + headerMapToString(additionalHttpHeaders));
+    super.loadUrl(url, additionalHttpHeaders);
   }
 
   /**
